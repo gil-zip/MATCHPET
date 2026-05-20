@@ -19,7 +19,9 @@
 }
 
 .lado-esq {
-  background-image: url("/imgs/MATCHPET.png");
+  background-image: url("./imgs/MATCHPET.png"); /* O ./ indica partindo da raiz da src */
+  background-size: cover;
+  background-position: center;
   display: flex;
   align-items: center;
   justify-content: center;
