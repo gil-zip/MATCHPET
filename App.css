@@ -6,7 +6,7 @@
   box-sizing: border-box;
 }
 
-.container {
+.container-main {
   display: flex;
   width: 100%;
   min-height: 100vh;
@@ -15,13 +15,11 @@
 .lado-esq,
 .lado-dir {
   flex: 1;
-  min-height: 100%;
+  min-height: 50%;
 }
 
 .lado-esq {
-  background-image: url("./imgs/MATCHPET.png"); /* O ./ indica partindo da raiz da src */
-  background-size: cover;
-  background-position: center;
+  background-image: url("./imgs/MATCHPET.png");
   display: flex;
   align-items: center;
   justify-content: center;
@@ -120,7 +118,7 @@
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   width: 100%;
-  max-width: 550px;
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -142,12 +140,9 @@
 }
 
 .lado-dir .content .forms .input:focus {
-  border: none;
-  border-bottom: 1px solid #363636;
-  border-radius: 0;
+  border: 2px solid #ffa500;
 }
 
-/* Campos desabilitados */
 .disabled-field {
   background-color: #f5f5f5 !important;
   border-color: #e0e0e0 !important;
@@ -165,9 +160,6 @@
   flex: 1;
 }
 
-/* ==========================================================================
-   BOTÕES DE RÁDIO
-   ========================================================================== */
 .radio-group-main,
 .radio-group-sub {
   display: flex;
@@ -229,9 +221,6 @@ input[type="radio"]:checked::before {
   transform: scale(1);
 }
 
-/* ==========================================================================
-   BOTÃO CADASTRAR
-   ========================================================================== */
 .btn-cadastrar {
   display: flex;
   align-items: center;
