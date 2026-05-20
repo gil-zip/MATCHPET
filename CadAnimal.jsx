@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "./Navbar.jsx";
+import MenuLateral from "./MenuLateral";
 import "./CadAnimal.css";
 
 export default function CadAnimal() {
+  const [menuAberto, setMenuAberto] = useState(false);
   return (
     <>
-      <Navbar />
+      <Navbar onOpenMenu={() => setMenuAberto(true)} />
+
+      <MenuLateral
+        isOpen={menuAberto}
+        onCloseMenu={() => setMenuAberto(false)}
+      />
 
       <div className="container-animal-page">
         <h1 className="title">Cadastro de Animal</h1>

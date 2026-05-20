@@ -7,16 +7,22 @@
 .menu {
   width: 20%;
   height: 100vh;
-
   background-color: #1e90ff;
-
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
   padding: 25px;
-
   box-shadow: 20px 0px 10px 1px rgba(0, 0, 0, 0.2);
+
+  position: fixed;
+  top: 0;
+  left: -1000px;
+  z-index: 1050;
+  transition: left 0.3s ease-in-out;
+}
+
+.menu.aberto {
+  left: 0;
 }
 
 .menu .name {
@@ -38,10 +44,9 @@
   background-color: transparent;
   border: none;
   outline: none;
-
   color: #ffff;
-
   transform: scale(1.6);
+  cursor: pointer;
 }
 
 .btn-fechar:hover {
@@ -60,6 +65,7 @@
 .hiperlinks a {
   text-decoration: none;
   color: #ffff;
+  transition: all 0.2s ease;
 }
 
 .hiperlinks a:hover {

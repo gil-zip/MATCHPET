@@ -2,10 +2,17 @@ import React from "react";
 import iconePatinha from "../imgs/paw.png";
 import "./MenuLateral.css";
 
-export default function MenuLateral() {
+export default function MenuLateral({ isOpen, onCloseMenu }) {
   return (
-    <div className="menu">
-      <div className="row">
+    <div className={`menu ${isOpen ? "aberto" : ""}`}>
+      <div
+        className="row"
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          width: "100%",
+        }}
+      >
         <div className="col">
           <h1 className="name">
             <span style={{ color: "#ffffff" }}>MATCH</span>
@@ -14,14 +21,16 @@ export default function MenuLateral() {
           </h1>
         </div>
         <div className="col">
-          <button className="btn-fechar">X</button>
+          <button className="btn-fechar" onClick={onCloseMenu}>
+            X
+          </button>{" "}
         </div>
       </div>
       <div className="hiperlinks">
-        <a href="#">
+        <a href="/home">
           <h3 className="link">Home</h3>
         </a>
-        <a href="#">
+        <a href="/cadAnimal">
           <h3 className="link">Cadastrar Animal</h3>
         </a>
         <a href="#">

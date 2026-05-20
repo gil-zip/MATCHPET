@@ -1,11 +1,15 @@
 import React from "react";
 import "./Navbar.css";
 
-export default function Navbar() {
+export default function Navbar({ onOpenMenu }) {
   return (
     <nav className="navbar-animal">
       <div className="menu-btn-container">
-        <button className="navbar-toggler-custom" type="button">
+        <button
+          className="navbar-toggler-custom"
+          type="button"
+          onClick={onOpenMenu}
+        >
           <span className="toggler-icon-custom"></span>
         </button>
       </div>
