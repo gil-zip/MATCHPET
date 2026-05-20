@@ -1,0 +1,253 @@
+@import url("https://fonts.cdnfonts.com/css/fredoka-one");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.lado-esq,
+.lado-dir {
+  flex: 1;
+  min-height: 100%;
+}
+
+.lado-esq {
+  background-image: url("/imgs/MATCHPET.png");
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+}
+
+.lado-esq .content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.lado-esq .name {
+  font-size: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-text-stroke: 1px #363636;
+  font-family: "Fredoka One", sans-serif;
+}
+
+.lado-esq .name img {
+  width: 75px;
+  height: 70px;
+}
+
+.lado-esq .logo {
+  height: 300px;
+  width: 300px;
+  background-color: white;
+  border-radius: 50%;
+  margin-top: 15px;
+}
+
+.lado-dir {
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lado-dir .content {
+  width: 100%;
+  padding: 40px;
+}
+
+.lado-dir .content .name {
+  font-family: "Fredoka One", sans-serif;
+  font-size: 32px;
+  -webkit-text-stroke: 1px #363636;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.lado-dir .content .name img {
+  width: 35px;
+  height: 32px;
+  margin-left: 8px;
+}
+
+.lado-dir .content hr {
+  border: 0;
+  border-top: 1px solid #e0e0e0;
+  margin-bottom: 30px;
+}
+
+.lado-dir .content .links {
+  display: flex;
+  gap: 25px;
+  margin-bottom: 35px;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.lado-dir .content .links a {
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 600;
+  color: #999;
+  padding-bottom: 8px;
+}
+
+.lado-dir .content .links a.active {
+  color: #333;
+  border-bottom: 2px solid #ffa500;
+}
+
+.lado-dir .content .forms {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 15px;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  width: 100%;
+  max-width: 550px;
+  margin: 0 auto;
+}
+
+.input-container {
+  width: 100%;
+}
+
+.lado-dir .content .forms .input {
+  width: 100%;
+  height: 50px;
+  border: 1px solid #333333;
+  border-radius: 10px;
+  padding: 0 15px;
+  font-size: 18px;
+  background-color: #ffffff;
+  outline: none;
+  color: #333;
+  transition: border-color 0.2s;
+}
+
+.lado-dir .content .forms .input:focus {
+  border: none;
+  border-bottom: 1px solid #363636;
+  border-radius: 0;
+}
+
+/* Campos desabilitados */
+.disabled-field {
+  background-color: #f5f5f5 !important;
+  border-color: #e0e0e0 !important;
+  color: #bbb !important;
+  cursor: not-allowed;
+}
+
+.form-row {
+  display: flex;
+  width: 100%;
+  gap: 15px;
+}
+
+.form-row .input-container {
+  flex: 1;
+}
+
+/* ==========================================================================
+   BOTÕES DE RÁDIO
+   ========================================================================== */
+.radio-group-main,
+.radio-group-sub {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  font-size: 18px;
+  color: #333;
+}
+
+.radio-group-main {
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.radio-group-sub {
+  gap: 50px;
+  justify-content: flex-start;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.radio-options {
+  display: flex;
+  gap: 30px;
+}
+
+.radio-options label,
+.radio-group-sub label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+input[type="radio"] {
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #000000;
+  border-radius: 50%;
+  outline: none;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+}
+
+input[type="radio"]::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transform: scale(0);
+  transition: 100ms transform ease-in-out;
+  background-color: #000000;
+}
+
+input[type="radio"]:checked::before {
+  transform: scale(1);
+}
+
+/* ==========================================================================
+   BOTÃO CADASTRAR
+   ========================================================================== */
+.btn-cadastrar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 45%;
+  height: 50px;
+  background-color: #ffa500;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 15px auto;
+  transition: background-color 0.2s;
+}
+
+.btn-cadastrar:hover {
+  background-color: #b87802;
+}
