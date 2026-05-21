@@ -76,6 +76,10 @@
   border: 2px solid #ffa500;
 }
 
+select option[value=""] {
+  display: none;
+}
+
 .btn-animal-action {
   width: 100%;
   height: 50px;

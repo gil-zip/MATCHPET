@@ -2,6 +2,7 @@ import { useState } from "react";
 import Login from "./pages/Login.jsx";
 import Cadastro from "./pages/Cadastro.jsx";
 import iconePatinha from "./imgs/paw.png";
+import Logo from "./imgs/Logo.png";
 import "./App.css";
 
 function App() {
@@ -16,7 +17,9 @@ function App() {
             <span style={{ color: "#ffa500" }}>PET</span>
             <img src={iconePatinha} alt="Patinha" />
           </h1>
-          <div className="logo"></div>
+          <div className="logo">
+            <img src={Logo} alt="" />
+          </div>
         </div>
       </div>
 
