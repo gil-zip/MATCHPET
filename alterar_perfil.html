@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alterar Perfil - MatchPet</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="top-bar" style="background-color: #1e90ff;">
+        <button id="open-menu" class="menu-icon">
+            <div></div><div></div><div></div>
+        </button>
+        <div class="user-profile">
+            <img src="assets/profile-icon.png" alt="Perfil">
+        </div>
+    </header>
+
+    <main class="main-content edit-profile-content">
+        <h1 class="page-title">Alterar Perfil</h1>
+
+        <form class="profile-form">
+            
+            <div class="input-group full-width">
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" name="nome">
+            </div>
+
+            <div class="input-group half-width">
+                <label for="cpf">CPF:</label>
+                <input type="text" id="cpf" name="cpf" placeholder="___.___.___-__">
+            </div>
+
+            <div class="input-group half-width">
+                <label for="nascimento">Data de Nascimento:</label>
+                <input type="text" id="nascimento" name="nascimento" placeholder="__/__/____">
+            </div>
+
+            <div class="input-group half-width">
+                <label for="telefone">Telefone:</label>
+                <input type="text" id="telefone" name="telefone" placeholder="(__) ____-____">
+            </div>
+
+            <div class="input-group half-width">
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" name="email">
+            </div>
+
+            <div class="input-group full-width">
+                <label for="senha">Senha:</label>
+                <input type="password" id="senha" name="senha">
+            </div>
+
+            <div class="input-group full-width">
+                <label for="confirma-senha">Confirme a senha:</label>
+                <input type="password" id="confirma-senha" name="confirma-senha">
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-cancelar">
+                    Cancelar <img src="assets/paw-icon.png" alt="Pata" class="btn-icon">
+                </button>
+                <button type="submit" class="btn btn-salvar">
+                    Salvar <img src="assets/paw-icon.png" alt="Pata" class="btn-icon">
+                </button>
+            </div>
+        </form>
+    </main>
+
+</body>
+</html>
