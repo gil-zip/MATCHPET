@@ -1,4 +1,4 @@
-# MatchPet Backend - Guia para Iniciantes 🐾
+# MatchPet Backend - Guia 🐾
 
 Este é o backend do projeto MatchPet, desenvolvido com **Java 17** e **Spring Boot**.
 
@@ -10,8 +10,7 @@ Este é o backend do projeto MatchPet, desenvolvido com **Java 17** e **Spring B
     *   MySQL rodando localmente (ou use os dados do Railway).
 
 2.  **Configuração do Banco de Dados**:
-    *   Abra o arquivo `src/main/resources/application.properties`.
-    *   Substitua os valores de `spring.datasource.url`, `username` e `password` pelos seus dados do MySQL.
+    *   No arquivo `src/main/resources/application.properties`.
 
 3.  **Execução**:
     *   No terminal, dentro da pasta `backend`, rode:
