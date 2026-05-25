@@ -16,7 +16,11 @@ Este é o backend do projeto MatchPet, desenvolvido com **Java 17** e **Spring B
 3.  **Execução**:
     *   No terminal, dentro da pasta `backend`, rode:
         ```bash
+        # No Linux ou Mac:
         ./mvnw spring-boot:run
+
+        # No Windows:
+        mvnw.cmd spring-boot:run
         ```
     *   A API estará disponível em `http://localhost:8080`.
 
