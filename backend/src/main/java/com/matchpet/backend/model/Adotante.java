@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class Adotante {
 
     @Id
-    private String cpf; // PK
+    private String cpf; // PK conforme solicitado
 
     private String nome;
     private String telefone;

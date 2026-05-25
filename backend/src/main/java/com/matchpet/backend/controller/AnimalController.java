@@ -2,6 +2,7 @@ package com.matchpet.backend.controller;
 
 import com.matchpet.backend.model.Animal;
 import com.matchpet.backend.service.AnimalService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,12 +29,12 @@ public class AnimalController {
     }
 
     @PostMapping
-    public ResponseEntity<Animal> cadastrar(@RequestBody Animal animal) {
+    public ResponseEntity<Animal> cadastrar(@Valid @RequestBody Animal animal) {
         return ResponseEntity.ok(animalService.salvar(animal));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Animal> atualizar(@PathVariable Long id, @RequestBody Animal animal) {
+    public ResponseEntity<Animal> atualizar(@PathVariable Long id, @Valid @RequestBody Animal animal) {
         Animal atualizado = animalService.atualizar(id, animal);
         if (atualizado != null) {
             return ResponseEntity.ok(atualizado);
