@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Cadastro.css";
+import api from "../services/api";
 
 export default function Cadastro() {
   const [tipoUsuario, setTipoUsuario] = useState("ong_protetor");
@@ -22,19 +23,41 @@ export default function Cadastro() {
     });
   };
 
-  const handleCadastroSubmit = (e) => {
+  const handleCadastroSubmit = async (e) => {
     e.preventDefault();
 
-    const dadosFinaisCadastro = {
-      ...usuario,
-      tipo: tipoUsuario,
-      subtipo: tipoUsuario === "ong_protetor" ? subtipo : "nenhum",
-    };
+    try {
+      if (tipoUsuario === "adotante") {
+        const dadosAdotante = {
+          nome: usuario.nome,
+          cpf: usuario.cpf,
+          telefone: usuario.tel,
+          email: usuario.email,
+          senha: usuario.senha,
+          // O backend espera um objeto endereco, mesmo que vazio para não dar erro se configurado como obrigatório
+          endereco: null
+        };
+        await api.post("/usuarios/adotante", dadosAdotante);
+      } else {
+        const dadosONG = {
+          nome: usuario.nome,
+          email: usuario.email,
+          senha: usuario.senha,
+          telefone: usuario.tel,
+          cnpj: subtipo === "ong" ? usuario.cnpj : null,
+          cpf: subtipo === "protetor" ? usuario.cpf : null,
+          tp_cadastro: subtipo.toUpperCase(), // "ONG" ou "PROTETOR"
+          endereco: null
+        };
+        await api.post("/usuarios/ong", dadosONG);
+      }
 
-    console.log(
-      "Objeto pronto para enviar ao Banco de Dados:",
-      dadosFinaisCadastro,
-    );
+      alert("Cadastro realizado com sucesso! Agora você pode fazer login.");
+      window.location.reload(); // Recarrega para voltar à aba de login
+    } catch (error) {
+      console.error("Erro ao realizar cadastro:", error);
+      alert("Erro ao realizar cadastro. Verifique os dados e tente novamente.");
+    }
   };
 
   return (
