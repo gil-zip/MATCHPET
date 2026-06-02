@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./Cadastro.css";
 import api from "../services/api";
 
-export default function Cadastro() {
+export default function Cadastro({ aoSucesso }) {
   const [tipoUsuario, setTipoUsuario] = useState("ong_protetor");
   const [subtipo, setSubtipo] = useState("ong");
 
@@ -53,7 +53,7 @@ export default function Cadastro() {
       }
 
       alert("Cadastro realizado com sucesso! Agora você pode fazer login.");
-      window.location.reload(); // Recarrega para voltar à aba de login
+      if (aoSucesso) aoSucesso();
     } catch (error) {
       console.error("Erro ao realizar cadastro:", error);
       alert("Erro ao realizar cadastro. Verifique os dados e tente novamente.");

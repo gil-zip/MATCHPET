@@ -57,7 +57,11 @@ function App() {
           </div>
 
           <div className="forms">
-            {abaAtiva === "entrar" ? <Login /> : <Cadastro />}
+            {abaAtiva === "entrar" ? (
+              <Login />
+            ) : (
+              <Cadastro aoSucesso={() => setAbaAtiva("entrar")} />
+            )}
           </div>
         </div>
       </div>
