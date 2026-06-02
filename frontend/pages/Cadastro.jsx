@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 import "./Cadastro.css";
+import api from "../api/api";
+import { useNavigate } from "react-router-dom";
 
 export default function Cadastro() {
   const [tipoUsuario, setTipoUsuario] = useState("ong_protetor");
   const [subtipo, setSubtipo] = useState("ong");
+  const [confirmaSenha, setConfirmaSenha] = useState("");
+  const [erro, setErro] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const [usuario, setUsuario] = useState({
     nome: "",
@@ -16,25 +23,48 @@ export default function Cadastro() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUsuario({
-      ...usuario,
-      [name]: value,
-    });
+    setUsuario({ ...usuario, [name]: value });
   };
 
-  const handleCadastroSubmit = (e) => {
+  const handleCadastroSubmit = async (e) => {
     e.preventDefault();
+    setErro("");
 
-    const dadosFinaisCadastro = {
-      ...usuario,
-      tipo: tipoUsuario,
-      subtipo: tipoUsuario === "ong_protetor" ? subtipo : "nenhum",
-    };
+    // Validação de senha
+    if (usuario.senha !== confirmaSenha) {
+      setErro("As senhas não coincidem.");
+      return;
+    }
 
-    console.log(
-      "Objeto pronto para enviar ao Banco de Dados:",
-      dadosFinaisCadastro,
-    );
+    setLoading(true);
+
+    try {
+      if (tipoUsuario === "adotante") {
+        await api.post("/usuarios/adotante", {
+          nome: usuario.nome,
+          cpf: usuario.cpf,
+          tel: usuario.tel,
+          email: usuario.email,
+          senha: usuario.senha,
+        });
+      } else {
+        await api.post("/usuarios/ong", {
+          nome: usuario.nome,
+          cpf: subtipo === "protetor" ? usuario.cpf : null,
+          cnpj: subtipo === "ong" ? usuario.cnpj : null,
+          tel: usuario.tel,
+          email: usuario.email,
+          senha: usuario.senha,
+          tp_cadastro: subtipo === "ong" ? "ONG" : "PROTETOR",
+        });
+      }
+
+      navigate("/");
+    } catch (err) {
+      setErro("Erro ao cadastrar. Verifique os dados e tente novamente.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -173,12 +203,16 @@ export default function Cadastro() {
           type="password"
           className="input-field"
           placeholder="Confirme a senha:"
+          value={confirmaSenha}
+          onChange={(e) => setConfirmaSenha(e.target.value)}
           required
         />
       </div>
 
-      <button type="submit" className="btn-enviar">
-        Cadastrar
+      {erro && <p className="erro">{erro}</p>}
+
+      <button type="submit" className="btn-enviar" disabled={loading}>
+        {loading ? "Cadastrando..." : "Cadastrar"}
       </button>
     </form>
   );

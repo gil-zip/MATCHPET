@@ -2,9 +2,13 @@ import React, { useState, useRef } from "react";
 import Navbar from "./Navbar.jsx";
 import MenuLateral from "./MenuLateral";
 import "./CadAnimal.css";
+import api from "../api/api";
 
 export default function CadAnimal() {
   const [menuAberto, setMenuAberto] = useState(false);
+  const [erro, setErro] = useState("");
+  const [sucesso, setSucesso] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     nome: "",
@@ -16,7 +20,6 @@ export default function CadAnimal() {
   });
 
   const [file, setFile] = useState(null);
-
   const fileInputRef = useRef(null);
 
   const handleInputChange = (event) => {
@@ -26,9 +29,7 @@ export default function CadAnimal() {
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
-    if (selectedFile) {
-      setFile(selectedFile);
-    }
+    if (selectedFile) setFile(selectedFile);
   };
 
   const handleButtonClick = () => {
@@ -37,17 +38,37 @@ export default function CadAnimal() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setErro("");
+    setSucesso(false);
+    setLoading(true);
 
-    const dataToSend = new FormData();
-    dataToSend.append("nome", formData.nome);
-    dataToSend.append("especie", formData.especie);
-    dataToSend.append("raca", formData.raca);
-    dataToSend.append("idade", formData.idade);
-    dataToSend.append("porte", formData.porte);
-    dataToSend.append("descricao", formData.descricao);
+    const idOng = localStorage.getItem("id_ong");
 
-    if (file) {
-      dataToSend.append("image", file);
+    try {
+      await api.post("/animais", {
+        nome: formData.nome,
+        especie: formData.especie,
+        raca: formData.raca,
+        idade: Number(formData.idade),
+        porte: formData.porte,
+        especificidades: formData.descricao,
+        ong: { id_ong: Number(idOng) },
+      });
+
+      setSucesso(true);
+      setFormData({
+        nome: "",
+        especie: "",
+        raca: "",
+        idade: "",
+        porte: "",
+        descricao: "",
+      });
+      setFile(null);
+    } catch (err) {
+      setErro("Erro ao cadastrar animal. Tente novamente.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -63,7 +84,6 @@ export default function CadAnimal() {
       <div className="container-animal-page">
         <h1 className="title">Cadastro de Animal</h1>
 
-        {/* Adicionado o onSubmit aqui */}
         <form onSubmit={handleSubmit} className="animal-form">
           <div className="animal-row">
             <div className="animal-col">
@@ -74,15 +94,22 @@ export default function CadAnimal() {
                 onChange={handleInputChange}
                 placeholder="Nome:"
                 className="animal-input-field"
+                required
               />
             </div>
             <div className="animal-col">
-              <select name="especie" id="" className="animal-input-field">
-                <option value="" disabled selected>
+              <select
+                name="especie"
+                value={formData.especie}
+                onChange={handleInputChange}
+                className="animal-input-field"
+                required
+              >
+                <option value="" disabled>
                   Espécie
                 </option>
-                <option value="gato">Gato</option>
-                <option value="gato">Cachorro</option>
+                <option value="Gato">Gato</option>
+                <option value="Cachorro">Cachorro</option>
               </select>
             </div>
           </div>
@@ -96,26 +123,36 @@ export default function CadAnimal() {
                 onChange={handleInputChange}
                 placeholder="Raça:"
                 className="animal-input-field"
+                required
               />
             </div>
             <div className="animal-col">
               <input
-                type="text"
+                type="number"
                 name="idade"
                 value={formData.idade}
                 onChange={handleInputChange}
                 placeholder="Idade:"
                 className="animal-input-field"
+                min="0"
+                max="30"
+                required
               />
             </div>
             <div className="animal-col">
-              <select name="especie" id="" className="animal-input-field">
-                <option value="" disabled selected>
+              <select
+                name="porte"
+                value={formData.porte}
+                onChange={handleInputChange}
+                className="animal-input-field"
+                required
+              >
+                <option value="" disabled>
                   Porte
                 </option>
-                <option value="gato">Pequeno</option>
-                <option value="gato">Médio</option>
-                <option value="gato">Grande</option>
+                <option value="Pequeno">Pequeno</option>
+                <option value="Médio">Médio</option>
+                <option value="Grande">Grande</option>
               </select>
             </div>
           </div>
@@ -128,12 +165,14 @@ export default function CadAnimal() {
               onChange={handleInputChange}
               className="animal-textarea"
               placeholder="Descrição (opcional)"
-            ></textarea>
+            />
           </div>
+
+          {erro && <p className="erro">{erro}</p>}
+          {sucesso && <p className="sucesso">Animal cadastrado com sucesso!</p>}
 
           <div className="animal-row animal-buttons">
             <div className="animal-col">
-              {/* Input real escondido */}
               <input
                 type="file"
                 ref={fileInputRef}
@@ -141,7 +180,6 @@ export default function CadAnimal() {
                 accept="image/*"
                 style={{ display: "none" }}
               />
-              {/* Botão falso que o usuário interage */}
               <button
                 type="button"
                 onClick={handleButtonClick}
@@ -152,9 +190,12 @@ export default function CadAnimal() {
             </div>
 
             <div className="animal-col">
-              {/* Esse botão dispara o onSubmit do form */}
-              <button type="submit" className="btn-animal-action btn-salvar">
-                Salvar
+              <button
+                type="submit"
+                className="btn-animal-action btn-salvar"
+                disabled={loading}
+              >
+                {loading ? "Salvando..." : "Salvar"}
               </button>
             </div>
           </div>
