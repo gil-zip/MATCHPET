@@ -17,11 +17,19 @@ public class ONG {
     private Long id_ong;
 
     private String nome;
+
+    @Column(unique = true)
     private String email;
+
     private String senha;
     private String telefone;
+
+    @Column(unique = true)
     private String cnpj;
+
+    @Column(unique = true)
     private String cpf; // Para protetores independentes
+
     private String tp_cadastro; // 'ONG' ou 'PROTETOR'
 
     @OneToOne(cascade = CascadeType.ALL)

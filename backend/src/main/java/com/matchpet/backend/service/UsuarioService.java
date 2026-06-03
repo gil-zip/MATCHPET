@@ -17,10 +17,29 @@ public class UsuarioService {
     private ONGRepository ongRepository;
 
     public Adotante salvarAdotante(Adotante adotante) {
+        if (adotanteRepository.existsById(adotante.getCpf())) {
+            throw new RuntimeException("Já existe um adotante cadastrado com este CPF.");
+        }
+        if (adotanteRepository.findByEmail(adotante.getEmail()).isPresent()) {
+            throw new RuntimeException("E-mail já cadastrado.");
+        }
         return adotanteRepository.save(adotante);
     }
 
     public ONG salvarONG(ONG ong) {
+        if (ong.getCnpj() != null && !ong.getCnpj().isEmpty()) {
+            if (ongRepository.findAll().stream().anyMatch(o -> ong.getCnpj().equals(o.getCnpj()))) {
+                throw new RuntimeException("Já existe uma ONG cadastrada com este CNPJ.");
+            }
+        }
+        if (ong.getCpf() != null && !ong.getCpf().isEmpty()) {
+            if (ongRepository.findAll().stream().anyMatch(o -> ong.getCpf().equals(o.getCpf()))) {
+                throw new RuntimeException("Já existe um protetor cadastrado com este CPF.");
+            }
+        }
+        if (ongRepository.findByEmail(ong.getEmail()).isPresent()) {
+            throw new RuntimeException("E-mail já cadastrado.");
+        }
         return ongRepository.save(ong);
     }
 }

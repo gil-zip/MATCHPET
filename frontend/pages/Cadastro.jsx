@@ -56,7 +56,8 @@ export default function Cadastro({ aoSucesso }) {
       if (aoSucesso) aoSucesso();
     } catch (error) {
       console.error("Erro ao realizar cadastro:", error);
-      alert("Erro ao realizar cadastro. Verifique os dados e tente novamente.");
+      const mensagem = error.response?.data || "Erro ao realizar cadastro. Verifique os dados e tente novamente.";
+      alert(mensagem);
     }
   };
 
