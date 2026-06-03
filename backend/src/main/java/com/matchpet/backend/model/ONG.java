@@ -32,6 +32,10 @@ public class ONG {
 
     private String tp_cadastro; // 'ONG' ou 'PROTETOR'
 
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String imagem;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_endereco", referencedColumnName = "id_endereco")
     private Endereco endereco;

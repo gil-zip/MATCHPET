@@ -15,10 +15,10 @@ export default function CadAnimal() {
     raca: "",
     idade: "",
     porte: "",
-    especificidades: "", // No backend é especificidades, não descricao
+    especificidades: "",
   });
 
-  const [file, setFile] = useState(null);
+  const [imagemBase64, setImagemBase64] = useState("");
   const fileInputRef = useRef(null);
 
   const handleInputChange = (event) => {
@@ -29,7 +29,11 @@ export default function CadAnimal() {
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
     if (selectedFile) {
-      setFile(selectedFile);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagemBase64(reader.result);
+      };
+      reader.readAsDataURL(selectedFile);
     }
   };
 
@@ -40,7 +44,6 @@ export default function CadAnimal() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Recupera a ONG logada do localStorage
     const usuarioLogado = JSON.parse(localStorage.getItem("usuario"));
 
     if (!usuarioLogado || !usuarioLogado.id_ong) {
@@ -56,6 +59,7 @@ export default function CadAnimal() {
       porte: formData.porte,
       especificidades: formData.especificidades,
       status: "disponível",
+      imagem: imagemBase64, // Enviando a imagem em base64
       ong: {
         id_ong: usuarioLogado.id_ong
       }
@@ -176,8 +180,9 @@ export default function CadAnimal() {
                 type="button"
                 onClick={handleButtonClick}
                 className="btn-animal-action btn-foto"
+                style={{ backgroundColor: imagemBase64 ? "#4CAF50" : "" }}
               >
-                {file ? `Selecionado: ${file.name}` : "Foto"}
+                {imagemBase64 ? "Foto Selecionada ✓" : "Foto"}
               </button>
             </div>
 

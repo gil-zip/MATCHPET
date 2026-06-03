@@ -31,6 +31,10 @@ public class Animal {
     private String status; // disponível, adotado ou em andamento
     private String especificidades;
 
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String imagem;
+
     @ManyToOne
     @JoinColumn(name = "id_ong", referencedColumnName = "id_ong")
     private ONG ong;

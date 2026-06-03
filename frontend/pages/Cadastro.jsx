@@ -13,7 +13,22 @@ export default function Cadastro({ aoSucesso }) {
     tel: "",
     email: "",
     senha: "",
+    imagem: "",
   });
+
+  const [preview, setPreview] = useState(null);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUsuario({ ...usuario, imagem: reader.result });
+        setPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,7 +49,7 @@ export default function Cadastro({ aoSucesso }) {
           telefone: usuario.tel,
           email: usuario.email,
           senha: usuario.senha,
-          // O backend espera um objeto endereco, mesmo que vazio para não dar erro se configurado como obrigatório
+          imagem: usuario.imagem,
           endereco: null
         };
         await api.post("/usuarios/adotante", dadosAdotante);
@@ -47,6 +62,7 @@ export default function Cadastro({ aoSucesso }) {
           cnpj: subtipo === "ong" ? usuario.cnpj : null,
           cpf: subtipo === "protetor" ? usuario.cpf : null,
           tp_cadastro: subtipo.toUpperCase(), // "ONG" ou "PROTETOR"
+          imagem: usuario.imagem,
           endereco: null
         };
         await api.post("/usuarios/ong", dadosONG);
@@ -201,7 +217,25 @@ export default function Cadastro({ aoSucesso }) {
         />
       </div>
 
-      <button type="submit" className="btn-enviar">
+      <div className="input-container" style={{ marginTop: "10px" }}>
+        <label className="radio-label" style={{ display: "block", marginBottom: "5px" }}>Foto de Perfil:</label>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="input-field"
+          style={{ padding: "5px" }}
+        />
+        {preview && (
+          <img
+            src={preview}
+            alt="Preview"
+            style={{ width: "60px", height: "60px", borderRadius: "50%", marginTop: "10px", objectFit: "cover" }}
+          />
+        )}
+      </div>
+
+      <button type="submit" className="btn-enviar" style={{ marginTop: "20px" }}>
         Cadastrar
       </button>
     </form>

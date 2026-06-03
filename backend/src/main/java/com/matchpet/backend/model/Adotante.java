@@ -23,6 +23,10 @@ public class Adotante {
 
     private String senha;
 
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String imagem;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_endereco", referencedColumnName = "id_endereco")
     private Endereco endereco;
