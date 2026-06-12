@@ -1,8 +1,17 @@
 import React from "react";
 import iconePatinha from "../imgs/paw.png";
 import "./MenuLateral.css";
+import { useNavigate } from "react-router-dom";
 
 export default function MenuLateral({ isOpen, onCloseMenu }) {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("usuario");
+    alert("Você saiu da conta.");
+    navigate("/");
+  };
+
   return (
     <div className={`menu ${isOpen ? "aberto" : ""}`}>
       <div
@@ -41,7 +50,7 @@ export default function MenuLateral({ isOpen, onCloseMenu }) {
         </a>
       </div>
       <div className="sair">
-        <button className="btn-fechar">Sair</button>
+        <button className="btn-fechar" onClick={handleLogout}>Sair</button>
       </div>
     </div>
   );

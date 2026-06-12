@@ -4,6 +4,7 @@ import com.matchpet.backend.model.Adotante;
 import com.matchpet.backend.model.ONG;
 import com.matchpet.backend.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,13 +17,20 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @PostMapping("/adotante")
-    public ResponseEntity<Adotante> cadastrarAdotante(@RequestBody Adotante adotante) {
-        return ResponseEntity.ok(usuarioService.salvarAdotante(adotante));
+    public ResponseEntity<Object> cadastrarAdotante(@RequestBody Adotante adotante) {
+        try {
+            return ResponseEntity.ok(usuarioService.salvarAdotante(adotante));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @PostMapping("/ong")
-    public ResponseEntity<ONG> cadastrarONG(@RequestBody ONG ong) {
-        // Serve tanto para ONG quanto para Protetor, diferenciado pelo tp_cadastro
-        return ResponseEntity.ok(usuarioService.salvarONG(ong));
+    public ResponseEntity<Object> cadastrarONG(@RequestBody ONG ong) {
+        try {
+            return ResponseEntity.ok(usuarioService.salvarONG(ong));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 }
