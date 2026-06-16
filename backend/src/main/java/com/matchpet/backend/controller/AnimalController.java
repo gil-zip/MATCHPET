@@ -1,12 +1,18 @@
 package com.matchpet.backend.controller;
 
+import com.matchpet.backend.dto.AnimalDTO;
 import com.matchpet.backend.model.Animal;
+import com.matchpet.backend.model.Usuario;
 import com.matchpet.backend.service.AnimalService;
-import jakarta.validation.Valid;
+import com.matchpet.backend.service.UsuarioService;
+import com.matchpet.backend.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/animais")
@@ -16,35 +22,95 @@ public class AnimalController {
     @Autowired
     private AnimalService animalService;
 
-    @GetMapping
-    public List<Animal> listarTodos() {
-        return animalService.listarTodos();
-    }
+    @Autowired
+    private UsuarioService usuarioService;
 
-    @GetMapping("/disponiveis")
-    public List<Animal> listarDisponiveis(
-            @RequestParam(required = false) String especie,
-            @RequestParam(required = false) String porte) {
-        return animalService.listarDisponiveis(especie, porte);
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @GetMapping
+    public List<AnimalDTO> listarTodos() {
+        return animalService.listarTodos().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @PostMapping
-    public ResponseEntity<Animal> cadastrar(@Valid @RequestBody Animal animal) {
-        return ResponseEntity.ok(animalService.salvar(animal));
+    public ResponseEntity<AnimalDTO> salvar(@RequestBody Map<String, Object> payload) {
+        AnimalDTO animalDTO = new AnimalDTO();
+        animalDTO.setId_animal(payload.get("id_animal") != null ? Long.valueOf(payload.get("id_animal").toString()) : null);
+        animalDTO.setNome((String) payload.get("nome"));
+        animalDTO.setEspecie((String) payload.get("especie"));
+        animalDTO.setRaca((String) payload.get("raca"));
+        animalDTO.setIdade(payload.get("idade") != null ? Integer.valueOf(payload.get("idade").toString()) : null);
+        animalDTO.setPorte((String) payload.get("porte"));
+        animalDTO.setStatus((String) payload.get("status"));
+        animalDTO.setEspecificidades((String) payload.get("especificidades"));
+        animalDTO.setImagem((String) payload.get("imagem"));
+
+        if (payload.get("id_ong") != null) {
+            animalDTO.setId_ong(Long.valueOf(payload.get("id_ong").toString()));
+        } else if (payload.get("ong") != null) {
+            Map<String, Object> ongMap = (Map<String, Object>) payload.get("ong");
+            if (ongMap.get("id_ong") != null) {
+                animalDTO.setId_ong(Long.valueOf(ongMap.get("id_ong").toString()));
+            } else if (ongMap.get("id_usuario") != null) {
+                animalDTO.setId_ong(Long.valueOf(ongMap.get("id_usuario").toString()));
+            }
+        }
+
+        Animal animal = convertToEntity(animalDTO);
+        Animal salvo = animalService.salvar(animal);
+        return ResponseEntity.ok(convertToDTO(salvo));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Animal> atualizar(@PathVariable Long id, @Valid @RequestBody Animal animal) {
-        Animal atualizado = animalService.atualizar(id, animal);
-        if (atualizado != null) {
-            return ResponseEntity.ok(atualizado);
-        }
-        return ResponseEntity.notFound().build();
+    @GetMapping("/{id}")
+    public ResponseEntity<AnimalDTO> buscarPorId(@PathVariable Long id) {
+        return animalService.buscarPorId(id)
+                .map(animal -> ResponseEntity.ok(convertToDTO(animal)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         animalService.deletar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    private Animal convertToEntity(AnimalDTO dto) {
+        Animal entity = new Animal();
+        entity.setId_animal(dto.getId_animal());
+        entity.setNome(dto.getNome());
+        entity.setEspecie(dto.getEspecie());
+        entity.setRaca(dto.getRaca());
+        entity.setIdade(dto.getIdade());
+        entity.setPorte(dto.getPorte());
+        entity.setStatus(dto.getStatus());
+        entity.setEspecificidades(dto.getEspecificidades());
+        entity.setImagem(usuarioService.converterBase64ParaBytes(dto.getImagem()));
+
+        if (dto.getId_ong() != null) {
+            Usuario ong = usuarioRepository.findById(dto.getId_ong())
+                    .orElseThrow(() -> new RuntimeException("ONG não encontrada"));
+            entity.setOng(ong);
+        }
+        return entity;
+    }
+
+    private AnimalDTO convertToDTO(Animal entity) {
+        AnimalDTO dto = new AnimalDTO();
+        dto.setId_animal(entity.getId_animal());
+        dto.setNome(entity.getNome());
+        dto.setEspecie(entity.getEspecie());
+        dto.setRaca(entity.getRaca());
+        dto.setIdade(entity.getIdade());
+        dto.setPorte(entity.getPorte());
+        dto.setStatus(entity.getStatus());
+        dto.setEspecificidades(entity.getEspecificidades());
+        dto.setImagem(usuarioService.converterBytesParaBase64(entity.getImagem()));
+        if (entity.getOng() != null) {
+            dto.setId_ong(entity.getOng().getId_usuario());
+        }
+        return dto;
     }
 }

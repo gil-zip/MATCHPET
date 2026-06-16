@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Navbar from "./Navbar.jsx";
 import MenuLateral from "./MenuLateral";
 import "./AlterarPerfil.css";
-import api from "../api/api";
+import api from "../services/api";
 
 export default function AlterarPerfil() {
   const [menuAberto, setMenuAberto] = useState(false);

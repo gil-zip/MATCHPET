@@ -17,13 +17,14 @@ public class Adocao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_adocao;
 
+    @Column(nullable = false)
     private LocalDate data_adocao;
 
     @ManyToOne
-    @JoinColumn(name = "id_animal", referencedColumnName = "id_animal")
+    @JoinColumn(name = "id_animal", referencedColumnName = "id_animal", nullable = false)
     private Animal animal;
 
     @ManyToOne
-    @JoinColumn(name = "id_adotante", referencedColumnName = "cpf")
-    private Adotante adotante;
+    @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario", nullable = false)
+    private Usuario usuario;
 }

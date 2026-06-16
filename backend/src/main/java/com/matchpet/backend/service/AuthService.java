@@ -1,9 +1,7 @@
 package com.matchpet.backend.service;
 
-import com.matchpet.backend.model.Adotante;
-import com.matchpet.backend.model.ONG;
-import com.matchpet.backend.repository.AdotanteRepository;
-import com.matchpet.backend.repository.ONGRepository;
+import com.matchpet.backend.model.Usuario;
+import com.matchpet.backend.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
@@ -12,24 +10,13 @@ import java.util.Optional;
 public class AuthService {
 
     @Autowired
-    private AdotanteRepository adotanteRepository;
+    private UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private ONGRepository ongRepository;
-
-    public Object login(String email, String senha) {
-        // Tenta encontrar em Adotante
-        Optional<Adotante> adotante = adotanteRepository.findByEmail(email);
-        if (adotante.isPresent() && adotante.get().getSenha().equals(senha)) {
-            return adotante.get();
+    public Usuario login(String email, String senha) {
+        Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
+        if (usuario.isPresent() && usuario.get().getSenha().equals(senha)) {
+            return usuario.get();
         }
-
-        // Tenta encontrar em ONG/Protetor
-        Optional<ONG> ong = ongRepository.findByEmail(email);
-        if (ong.isPresent() && ong.get().getSenha().equals(senha)) {
-            return ong.get();
-        }
-
         return null;
     }
 }
