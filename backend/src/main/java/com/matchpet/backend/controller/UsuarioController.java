@@ -3,6 +3,7 @@ package com.matchpet.backend.controller;
 import com.matchpet.backend.dto.UsuarioDTO;
 import com.matchpet.backend.model.Usuario;
 import com.matchpet.backend.model.TipoUsuario;
+import com.matchpet.backend.repository.UsuarioRepository;
 import com.matchpet.backend.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,43 +20,38 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
     @PostMapping
     public ResponseEntity<Object> cadastrarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
         try {
             Usuario usuario = convertToEntity(usuarioDTO);
             Usuario salvo = usuarioService.salvarUsuario(usuario);
-            return ResponseEntity.ok(convertToDTO(salvo));
+            return ResponseEntity.ok((Object) convertToDTO(salvo));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
-    // Método PUT atualizado para preservar o endereço e a senha antiga do banco
     @PutMapping("/{id}")
-    public ResponseEntity<Object> atualizarUsuario(@PathVariable("id") Long id, @RequestBody UsuarioDTO usuarioDTO) {
+    public ResponseEntity<Object> atualizarUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO) {
         try {
-            usuarioDTO.setId_usuario(id);
-            
-            // 1. Converte os dados novos vindos do Front-End
-            Usuario usuarioDadosNovos = convertToEntity(usuarioDTO);
-            
-            // 2. Busca o registro atual direto do banco de dados
-            Usuario usuarioExistente = usuarioService.buscarPorId(id); 
-            
-            if (usuarioExistente != null) {
-                // 3. Reatribui o endereço antigo para não quebrar o vínculo
-                usuarioDadosNovos.setEndereco(usuarioExistente.getEndereco());
-                
-                // 4. Se o usuário não digitou uma nova senha, mantém a que já estava no banco
-                if (usuarioDadosNovos.getSenha() == null || usuarioDadosNovos.getSenha().isEmpty()) {
-                    usuarioDadosNovos.setSenha(usuarioExistente.getSenha());
-                }
-            }
-            
-            // 5. Salva o objeto mesclado com sucesso
-            Usuario atualizado = usuarioService.salvarUsuario(usuarioDadosNovos);
-            
-            return ResponseEntity.ok(convertToDTO(atualizado));
+            return usuarioRepository.findById(id)
+                    .map(usuario -> {
+                        usuario.setNome(usuarioDTO.getNome());
+                        usuario.setEmail(usuarioDTO.getEmail());
+                        usuario.setSenha(usuarioDTO.getSenha());
+                        usuario.setTelefone(usuarioDTO.getTelefone());
+                        usuario.setCpf(usuarioDTO.getCpf());
+                        usuario.setCnpj(usuarioDTO.getCnpj());
+                        if (usuarioDTO.getImagem() != null) {
+                            usuario.setImagem(usuarioService.converterBase64ParaBytes(usuarioDTO.getImagem()));
+                        }
+                        Usuario atualizado = usuarioService.salvarUsuario(usuario);
+                        return ResponseEntity.ok((Object) convertToDTO(atualizado));
+                    })
+                    .orElse(ResponseEntity.notFound().build());
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -116,7 +112,7 @@ public class UsuarioController {
         UsuarioDTO dto = new UsuarioDTO();
         dto.setId_usuario(entity.getId_usuario());
         dto.setNome(entity.getNome());
-        dto.setEmail(entity.getSenha()); // Mantido conforme estrutura original
+        dto.setEmail(entity.getEmail());
         dto.setSenha(entity.getSenha());
         dto.setTelefone(entity.getTelefone());
         dto.setTp_usuario(entity.getTp_usuario());
