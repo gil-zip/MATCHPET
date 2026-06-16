@@ -8,7 +8,7 @@ export default function MenuLateral({ isOpen, onCloseMenu }) {
 
   const handleLogout = () => {
     localStorage.removeItem("usuario");
-    alert("Você saiu da conta.");
+    //alert("Você saiu da conta.");
     navigate("/");
   };
 
@@ -42,7 +42,7 @@ export default function MenuLateral({ isOpen, onCloseMenu }) {
         <a href="/cadAnimal">
           <h3 className="link">Cadastrar Animal</h3>
         </a>
-        <a href="#">
+        <a href="/animais">
           <h3 className="link">Animais</h3>
         </a>
         <a href="#">
@@ -50,7 +50,9 @@ export default function MenuLateral({ isOpen, onCloseMenu }) {
         </a>
       </div>
       <div className="sair">
-        <button className="btn-fechar" onClick={handleLogout}>Sair</button>
+        <button className="btn-fechar" onClick={handleLogout}>
+          Sair
+        </button>
       </div>
     </div>
   );

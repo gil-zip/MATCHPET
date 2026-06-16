@@ -8,8 +8,9 @@ import {
 import App from "./App.jsx";
 import Home from "./pages/Home.jsx";
 import CadAnimal from "./pages/CadAnimal.jsx";
-import Login from "./pages/Login.jsx";
-import Cadastro from "./pages/Cadastro.jsx";
+import AlterarPerfil from "./pages/AlterarPerfil.jsx";
+import ListaAnimais from "./pages/ListaAnimais.jsx";
+import Solicitacoes from "./pages/solicitacoes.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function PrivateRoute({ children }) {
@@ -36,6 +37,33 @@ const router = createBrowserRouter([
     element: (
       <PrivateRoute>
         <CadAnimal />
+      </PrivateRoute>
+    ),
+  },
+
+  {
+    path: "/perfil",
+    element: (
+      <PrivateRoute>
+        <AlterarPerfil />
+      </PrivateRoute>
+    ),
+  },
+
+  {
+    path: "/animais",
+    element: (
+      <PrivateRoute>
+        <ListaAnimais />
+      </PrivateRoute>
+    ),
+  },
+
+  {
+    path: "/solicitacoes",
+    element: (
+      <PrivateRoute>
+        <Solicitacoes />
       </PrivateRoute>
     ),
   },
