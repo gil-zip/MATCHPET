@@ -30,6 +30,37 @@ public class UsuarioController {
         }
     }
 
+    // Método PUT atualizado para preservar o endereço e a senha antiga do banco
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> atualizarUsuario(@PathVariable("id") Long id, @RequestBody UsuarioDTO usuarioDTO) {
+        try {
+            usuarioDTO.setId_usuario(id);
+            
+            // 1. Converte os dados novos vindos do Front-End
+            Usuario usuarioDadosNovos = convertToEntity(usuarioDTO);
+            
+            // 2. Busca o registro atual direto do banco de dados
+            Usuario usuarioExistente = usuarioService.buscarPorId(id); 
+            
+            if (usuarioExistente != null) {
+                // 3. Reatribui o endereço antigo para não quebrar o vínculo
+                usuarioDadosNovos.setEndereco(usuarioExistente.getEndereco());
+                
+                // 4. Se o usuário não digitou uma nova senha, mantém a que já estava no banco
+                if (usuarioDadosNovos.getSenha() == null || usuarioDadosNovos.getSenha().isEmpty()) {
+                    usuarioDadosNovos.setSenha(usuarioExistente.getSenha());
+                }
+            }
+            
+            // 5. Salva o objeto mesclado com sucesso
+            Usuario atualizado = usuarioService.salvarUsuario(usuarioDadosNovos);
+            
+            return ResponseEntity.ok(convertToDTO(atualizado));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
     // Compatibilidade com frontend atual de Adotante
     @PostMapping("/adotante")
     public ResponseEntity<Object> cadastrarAdotante(@RequestBody Map<String, Object> payload) {
@@ -85,7 +116,7 @@ public class UsuarioController {
         UsuarioDTO dto = new UsuarioDTO();
         dto.setId_usuario(entity.getId_usuario());
         dto.setNome(entity.getNome());
-        dto.setEmail(entity.getEmail());
+        dto.setEmail(entity.getSenha()); // Mantido conforme estrutura original
         dto.setSenha(entity.getSenha());
         dto.setTelefone(entity.getTelefone());
         dto.setTp_usuario(entity.getTp_usuario());
