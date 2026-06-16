@@ -33,10 +33,6 @@ public class Animal {
     @Column(length = 20)
     private String porte;
 
-    @NotBlank(message = "O status é obrigatório")
-    @Column(nullable = false, length = 30)
-    private String status; // disponível, adotado ou em andamento
-
     @Column(columnDefinition = "TEXT")
     private String especificidades;
 

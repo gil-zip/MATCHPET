@@ -20,6 +20,9 @@ public class Adocao {
     @Column(nullable = false)
     private LocalDate data_adocao;
 
+    @Column(nullable = false, length = 30)
+    private String status; // PENDENTE, EM_ANDAMENTO, FINALIZADA
+
     @ManyToOne
     @JoinColumn(name = "id_animal", referencedColumnName = "id_animal", nullable = false)
     private Animal animal;

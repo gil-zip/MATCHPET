@@ -10,7 +10,6 @@ public class AnimalDTO {
     private String raca;
     private Integer idade;
     private String porte;
-    private String status;
     private String especificidades;
     private String imagem; // Base64
     private Long id_ong;

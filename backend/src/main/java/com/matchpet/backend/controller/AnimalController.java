@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -30,38 +29,35 @@ public class AnimalController {
 
     @GetMapping
     public List<AnimalDTO> listarTodos() {
-        return animalService.listarTodos().stream()
+        return animalService.listarTodosDisponiveis().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
     @PostMapping
-    public ResponseEntity<AnimalDTO> salvar(@RequestBody Map<String, Object> payload) {
-        AnimalDTO animalDTO = new AnimalDTO();
-        animalDTO.setId_animal(payload.get("id_animal") != null ? Long.valueOf(payload.get("id_animal").toString()) : null);
-        animalDTO.setNome((String) payload.get("nome"));
-        animalDTO.setEspecie((String) payload.get("especie"));
-        animalDTO.setRaca((String) payload.get("raca"));
-        animalDTO.setIdade(payload.get("idade") != null ? Integer.valueOf(payload.get("idade").toString()) : null);
-        animalDTO.setPorte((String) payload.get("porte"));
-        animalDTO.setStatus((String) payload.get("status"));
-        animalDTO.setEspecificidades((String) payload.get("especificidades"));
-        animalDTO.setImagem((String) payload.get("imagem"));
-
-        if (payload.get("id_ong") != null) {
-            animalDTO.setId_ong(Long.valueOf(payload.get("id_ong").toString()));
-        } else if (payload.get("ong") != null) {
-            Map<String, Object> ongMap = (Map<String, Object>) payload.get("ong");
-            if (ongMap.get("id_ong") != null) {
-                animalDTO.setId_ong(Long.valueOf(ongMap.get("id_ong").toString()));
-            } else if (ongMap.get("id_usuario") != null) {
-                animalDTO.setId_ong(Long.valueOf(ongMap.get("id_usuario").toString()));
-            }
-        }
-
+    public ResponseEntity<AnimalDTO> salvar(@RequestBody AnimalDTO animalDTO) {
         Animal animal = convertToEntity(animalDTO);
         Animal salvo = animalService.salvar(animal);
         return ResponseEntity.ok(convertToDTO(salvo));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AnimalDTO> atualizar(@PathVariable Long id, @RequestBody AnimalDTO dto) {
+        return animalService.buscarPorId(id)
+                .map(animal -> {
+                    animal.setNome(dto.getNome());
+                    animal.setEspecie(dto.getEspecie());
+                    animal.setRaca(dto.getRaca());
+                    animal.setIdade(dto.getIdade());
+                    animal.setPorte(dto.getPorte());
+                    animal.setEspecificidades(dto.getEspecificidades());
+                    if (dto.getImagem() != null) {
+                        animal.setImagem(usuarioService.converterBase64ParaBytes(dto.getImagem()));
+                    }
+                    Animal atualizado = animalService.salvar(animal);
+                    return ResponseEntity.ok(convertToDTO(atualizado));
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/{id}")
@@ -85,7 +81,6 @@ public class AnimalController {
         entity.setRaca(dto.getRaca());
         entity.setIdade(dto.getIdade());
         entity.setPorte(dto.getPorte());
-        entity.setStatus(dto.getStatus());
         entity.setEspecificidades(dto.getEspecificidades());
         entity.setImagem(usuarioService.converterBase64ParaBytes(dto.getImagem()));
 
@@ -105,7 +100,6 @@ public class AnimalController {
         dto.setRaca(entity.getRaca());
         dto.setIdade(entity.getIdade());
         dto.setPorte(entity.getPorte());
-        dto.setStatus(entity.getStatus());
         dto.setEspecificidades(entity.getEspecificidades());
         dto.setImagem(usuarioService.converterBytesParaBase64(entity.getImagem()));
         if (entity.getOng() != null) {
