@@ -1,0 +1,89 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.edit-profile-content {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 85px;
+
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8)),
+    url("../imgs/fundo.webp");
+}
+
+.page-title {
+  font-size: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Fredoka One", sans-serif;
+}
+
+.profile-form {
+  padding: 30px;
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.animal-row {
+  display: flex;
+  width: 100%;
+  gap: 15px;
+}
+
+.animal-col {
+  flex: 1;
+}
+
+.animal-input-field {
+  width: 100%;
+  height: 50px;
+  border: 1px solid #333333;
+  border-radius: 10px;
+  padding: 0 15px;
+  font-size: 18px;
+  background-color: #ffffff;
+  outline: none;
+  color: #333;
+}
+
+.animal-input-field:focus {
+  border: 2px solid #ffa500;
+}
+
+.btn-animal-action {
+  width: 100%;
+  height: 50px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-cancelar {
+  background-color: #dc3545;
+  color: #ffffff;
+}
+
+.btn-cancelar:hover {
+  background-color: #ae2936;
+}
+
+.btn-salvar {
+  background-color: #1e90ff;
+  color: white;
+}
+
+.btn-salvar:hover {
+  background-color: #1871c9;
+}
