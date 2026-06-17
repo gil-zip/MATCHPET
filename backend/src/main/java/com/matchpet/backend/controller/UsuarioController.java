@@ -34,6 +34,13 @@ public class UsuarioController {
         }
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> buscarUsuario(@PathVariable Long id) {
+        return usuarioRepository.findById(id)
+                .map(u -> ResponseEntity.ok((Object) convertToDTO(u)))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Object> atualizarUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO) {
         try {
