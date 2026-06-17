@@ -1,9 +1,13 @@
 package com.matchpet.backend.controller;
 
 import com.matchpet.backend.dto.AdocaoDTO;
+import com.matchpet.backend.dto.AdocaoRequestDTO;
 import com.matchpet.backend.model.Adocao;
+import com.matchpet.backend.model.Animal;
+import com.matchpet.backend.model.Usuario;
 import com.matchpet.backend.service.AdocaoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
@@ -26,9 +30,37 @@ public class AdocaoController {
     }
 
     @PostMapping("/adocoes")
-    public AdocaoDTO salvar(@RequestBody Adocao adocao) {
-        if (adocao.getStatus() == null) adocao.setStatus("PENDENTE");
+    public AdocaoDTO salvar(@RequestBody AdocaoRequestDTO request) {
+        Animal animal = new Animal();
+        animal.setId_animal(request.getId_animal());
+
+        Usuario usuario = new Usuario();
+        usuario.setId_usuario(request.getId_usuario());
+
+        Adocao adocao = new Adocao();
+        adocao.setAnimal(animal);
+        adocao.setUsuario(usuario);
+        adocao.setStatus("PENDENTE");
+        adocao.setData_adocao(null);
+
         return convertToDTO(adocaoService.salvar(adocao));
+    }
+
+    // Atualiza o status de uma adoção (ex: PENDENTE → EM_ANDAMENTO)
+    @PatchMapping("/adocoes/{id}/status")
+    public AdocaoDTO atualizarStatus(@PathVariable Long id,
+                                     @RequestBody Map<String, String> body) {
+        String novoStatus = body.get("status");
+        Adocao adocao = adocaoService.buscarPorId(id);
+        adocao.setStatus(novoStatus);
+        return convertToDTO(adocaoService.salvar(adocao));
+    }
+
+    // Cancela (exclui) uma solicitação de adoção
+    @DeleteMapping("/adocoes/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        adocaoService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/solicitacoes")
@@ -72,6 +104,7 @@ public class AdocaoController {
             dto.setId_usuario(entity.getUsuario().getId_usuario());
             dto.setNomeUsuario(entity.getUsuario().getNome());
             dto.setCpfUsuario(entity.getUsuario().getCpf());
+            dto.setTelefoneUsuario(entity.getUsuario().getTelefone());
         }
         return dto;
     }

@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -32,6 +34,15 @@ public class UsuarioController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UsuarioDTO>> listarTodos() {
+        return ResponseEntity.ok(
+            usuarioRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList())
+        );
     }
 
     @PutMapping("/{id}")

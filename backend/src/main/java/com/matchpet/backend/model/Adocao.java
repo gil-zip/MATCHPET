@@ -17,7 +17,7 @@ public class Adocao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_adocao;
 
-    @Column(nullable = false)
+    @Column(nullable = true) // nula até a adoção ser concluída
     private LocalDate data_adocao;
 
     @Column(nullable = false, length = 30)

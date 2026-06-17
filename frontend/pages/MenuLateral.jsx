@@ -50,7 +50,7 @@ export default function MenuLateral({ isOpen, onCloseMenu }) {
         <a href="/animais">
           <h3 className="link">Animais</h3>
         </a>
-        <a href="#">
+        <a href="/solicitacoes">
           <h3 className="link">Solicitações</h3>
         </a>
       </div>

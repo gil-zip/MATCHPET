@@ -19,4 +19,13 @@ public class AdocaoService {
     public Adocao salvar(Adocao adocao) {
         return adocaoRepository.save(adocao);
     }
+
+    public Adocao buscarPorId(Long id) {
+        return adocaoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Adoção não encontrada: " + id));
+    }
+
+    public void deletar(Long id) {
+        adocaoRepository.deleteById(id);
+    }
 }

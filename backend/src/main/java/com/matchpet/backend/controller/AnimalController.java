@@ -16,7 +16,8 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/animais")
-@CrossOrigin(origins = "*")
+// @CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:5173")
 public class AnimalController {
 
     @Autowired
