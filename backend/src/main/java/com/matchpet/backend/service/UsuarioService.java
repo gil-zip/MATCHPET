@@ -1,45 +1,56 @@
 package com.matchpet.backend.service;
 
-import com.matchpet.backend.model.Adotante;
-import com.matchpet.backend.model.ONG;
-import com.matchpet.backend.repository.AdotanteRepository;
-import com.matchpet.backend.repository.ONGRepository;
+import com.matchpet.backend.model.Usuario;
+import com.matchpet.backend.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.Base64;
 
 @Service
 public class UsuarioService {
 
     @Autowired
-    private AdotanteRepository adotanteRepository;
+    private UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private ONGRepository ongRepository;
-
-    public Adotante salvarAdotante(Adotante adotante) {
-        if (adotanteRepository.existsById(adotante.getCpf())) {
-            throw new RuntimeException("Já existe um adotante cadastrado com este CPF.");
-        }
-        if (adotanteRepository.findByEmail(adotante.getEmail()).isPresent()) {
-            throw new RuntimeException("E-mail já cadastrado.");
-        }
-        return adotanteRepository.save(adotante);
+    public Usuario salvarUsuario(Usuario usuario) {
+        validarUnicidade(usuario);
+        return usuarioRepository.save(usuario);
     }
 
-    public ONG salvarONG(ONG ong) {
-        if (ong.getCnpj() != null && !ong.getCnpj().isEmpty()) {
-            if (ongRepository.findAll().stream().anyMatch(o -> ong.getCnpj().equals(o.getCnpj()))) {
-                throw new RuntimeException("Já existe uma ONG cadastrada com este CNPJ.");
-            }
-        }
-        if (ong.getCpf() != null && !ong.getCpf().isEmpty()) {
-            if (ongRepository.findAll().stream().anyMatch(o -> ong.getCpf().equals(o.getCpf()))) {
-                throw new RuntimeException("Já existe um protetor cadastrado com este CPF.");
-            }
-        }
-        if (ongRepository.findByEmail(ong.getEmail()).isPresent()) {
+    private void validarUnicidade(Usuario usuario) {
+        if (usuario.getEmail() != null && usuarioRepository.findByEmail(usuario.getEmail())
+                .filter(u -> !u.getId_usuario().equals(usuario.getId_usuario())).isPresent()) {
             throw new RuntimeException("E-mail já cadastrado.");
         }
-        return ongRepository.save(ong);
+        if (usuario.getCpf() != null && !usuario.getCpf().isEmpty() && usuarioRepository.findByCpf(usuario.getCpf())
+                .filter(u -> !u.getId_usuario().equals(usuario.getId_usuario())).isPresent()) {
+            throw new RuntimeException("CPF já cadastrado.");
+        }
+        if (usuario.getCnpj() != null && !usuario.getCnpj().isEmpty() && usuarioRepository.findByCnpj(usuario.getCnpj())
+                .filter(u -> !u.getId_usuario().equals(usuario.getId_usuario())).isPresent()) {
+            throw new RuntimeException("CNPJ já cadastrado.");
+        }
+        if (usuario.getTelefone() != null && !usuario.getTelefone().isEmpty() && usuarioRepository.findByTelefone(usuario.getTelefone())
+                .filter(u -> !u.getId_usuario().equals(usuario.getId_usuario())).isPresent()) {
+            throw new RuntimeException("Telefone já cadastrado.");
+        }
+    }
+
+    public byte[] converterBase64ParaBytes(String base64) {
+        if (base64 == null || base64.isEmpty()) return null;
+        try {
+            String cleanBase64 = base64;
+            if (base64.contains(",")) {
+                cleanBase64 = base64.split(",")[1];
+            }
+            return Base64.getDecoder().decode(cleanBase64);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String converterBytesParaBase64(byte[] bytes) {
+        if (bytes == null || bytes.length == 0) return null;
+        return "data:image/png;base64," + Base64.getEncoder().encodeToString(bytes);
     }
 }

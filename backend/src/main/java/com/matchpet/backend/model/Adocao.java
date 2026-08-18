@@ -17,13 +17,17 @@ public class Adocao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_adocao;
 
+    @Column(nullable = true) // nula até a adoção ser concluída
     private LocalDate data_adocao;
 
+    @Column(nullable = false, length = 30)
+    private String status; // PENDENTE, EM_ANDAMENTO, FINALIZADA
+
     @ManyToOne
-    @JoinColumn(name = "id_animal", referencedColumnName = "id_animal")
+    @JoinColumn(name = "id_animal", referencedColumnName = "id_animal", nullable = false)
     private Animal animal;
 
     @ManyToOne
-    @JoinColumn(name = "id_adotante", referencedColumnName = "cpf")
-    private Adotante adotante;
+    @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario", nullable = false)
+    private Usuario usuario;
 }

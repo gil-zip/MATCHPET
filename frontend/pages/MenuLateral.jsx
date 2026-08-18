@@ -6,9 +6,12 @@ import { useNavigate } from "react-router-dom";
 export default function MenuLateral({ isOpen, onCloseMenu }) {
   const navigate = useNavigate();
 
+  const usuarioSalvo = localStorage.getItem("usuario");
+  const usuario = usuarioSalvo ? JSON.parse(usuarioSalvo) : null;
+  const isAdotante = usuario?.tp_usuario === "ADOTANTE";
+
   const handleLogout = () => {
     localStorage.removeItem("usuario");
-    //alert("Você saiu da conta.");
     navigate("/");
   };
 
@@ -39,13 +42,15 @@ export default function MenuLateral({ isOpen, onCloseMenu }) {
         <a href="/home">
           <h3 className="link">Home</h3>
         </a>
-        <a href="/cadAnimal">
-          <h3 className="link">Cadastrar Animal</h3>
-        </a>
+        {!isAdotante && (
+          <a href="/cadAnimal">
+            <h3 className="link">Cadastrar Animal</h3>
+          </a>
+        )}
         <a href="/animais">
           <h3 className="link">Animais</h3>
         </a>
-        <a href="#">
+        <a href="/solicitacoes">
           <h3 className="link">Solicitações</h3>
         </a>
       </div>

@@ -7,8 +7,7 @@ import java.util.List;
 
 @Repository
 public interface AnimalRepository extends JpaRepository<Animal, Long> {
-    List<Animal> findByStatus(String status);
-    List<Animal> findByEspecieAndStatus(String especie, String status);
-    List<Animal> findByPorteAndStatus(String porte, String status);
-    List<Animal> findByEspecieAndPorteAndStatus(String especie, String porte, String status);
+    List<Animal> findByEspecie(String especie);
+    List<Animal> findByPorte(String porte);
+    List<Animal> findByEspecieAndPorte(String especie, String porte);
 }
